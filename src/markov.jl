@@ -95,7 +95,7 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
             @simd for g in 1:G
                 CHᵢ += (ρˢᵍ[g, i, t] + ρᴾᴴᵍ[g, i, t] + ρᴾᴰᵍ[g, i, t] +
                         ρᴴᴿᵍ[g, i, t] + ρᴴᴰᵍ[g, i, t] + ρᴰᵍ[g, i, t] +
-                        ρᴿᵍ[g, i, t] + CHᵢᵍ[g, i]) * population.nᵢᵍ[g, i]
+                        ρᴿᵍ[g, i, t] + CHᵢᵍ[g, i, t]) * population.nᵢᵍ[g, i]
             end
             CHᵢ = (1 - ϕ) * κ₀ * (CHᵢ / population.nᵢ[i]) ^ population.σ
         end
@@ -146,7 +146,7 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
             if tᶜ == t
                 aux = ρˢᵍ[g, i, t]
                 ρˢᵍ[g, i, t] -= CHᵢᵍ[g, i, t]
-                CHᵢᵍ[g, i, t] = CHᵢ * aux
+                CHᵢᵍ[g, i, t + 1] = CHᵢ * aux
             end
         end
     end
