@@ -264,7 +264,8 @@ function print_status(epi_params::Epidemic_Params,
                     epi_params.ρᴴᴰᵍ[:, :, t] .+
                     epi_params.ρᴴᴿᵍ[:, :, t] .+
                     epi_params.ρᴿᵍ[:, :, t] .+
-                    epi_params.ρᴰᵍ[:, :, t]) .* population.nᵢᵍ[:, :])
+                    epi_params.ρᴰᵍ[:, :, t] .+
+                    epi_params.CHᵢᵍ[:, :, t]) .* population.nᵢᵍ[:, :])
 
     infected = sum(epi_params.ρᴵᵍ[:, :, t] .* population.nᵢᵍ[:, :] +
                    epi_params.ρᴬᵍ[:, :, t] .* population.nᵢᵍ[:, :])
