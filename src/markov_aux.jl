@@ -64,7 +64,7 @@ All the parameters contained in this structure are probabilities ranged between
 
 # Auxiliary
 
-- `CHᵢᵍ::Array{Float64, ·}`: Fraction of securely confined individuals for each
+- `CHᵢᵍ::Array{Float64, 3}`: Fraction of securely confined individuals for each
   strata, patch and time step.
 - `Qᵢᵍ::Array{Float64, 3}`: Suceptible contacts available for each strata on a
   given patch.
