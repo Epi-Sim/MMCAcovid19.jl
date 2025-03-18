@@ -95,7 +95,7 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
             @simd for g in 1:G
                 CHᵢ += (ρˢᵍ[g, i, t] + ρᴾᴴᵍ[g, i, t] + ρᴾᴰᵍ[g, i, t] +
                         ρᴴᴿᵍ[g, i, t] + ρᴴᴰᵍ[g, i, t] + ρᴰᵍ[g, i, t] +
-                        ρᴿᵍ[g, i, t] + CHᵢᵍ[g, i]) * population.nᵢᵍ[g, i]
+                        ρᴿᵍ[g, i, t] + CHᵢᵍ[g, i, t]) * population.nᵢᵍ[g, i]
             end
             CHᵢ = (1 - ϕ) * κ₀ * (CHᵢ / population.nᵢ[i]) ^ population.σ
         end
@@ -103,7 +103,7 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
         # Update compartmental probabilities
         @simd for g in 1:G
             if tᶜ == t
-                ρˢᵍ[g, i, t] += CHᵢᵍ[g, i]
+                ρˢᵍ[g, i, t] += CHᵢᵍ[g, i, t]
             end
 
             Πᵢᵍ = (1 - pᵍ_eff[g]) * Pᵢᵍ[g, i] + pᵍ_eff[g] * τᵢᵍ[g, i]
@@ -145,8 +145,8 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
 
             if tᶜ == t
                 aux = ρˢᵍ[g, i, t]
-                ρˢᵍ[g, i, t] -= CHᵢᵍ[g, i]
-                CHᵢᵍ[g, i] = CHᵢ * aux
+                ρˢᵍ[g, i, t] -= CHᵢᵍ[g, i, t]
+                CHᵢᵍ[g, i, t + 1] = CHᵢ * aux
             end
         end
     end
@@ -264,7 +264,8 @@ function print_status(epi_params::Epidemic_Params,
                     epi_params.ρᴴᴰᵍ[:, :, t] .+
                     epi_params.ρᴴᴿᵍ[:, :, t] .+
                     epi_params.ρᴿᵍ[:, :, t] .+
-                    epi_params.ρᴰᵍ[:, :, t]) .* population.nᵢᵍ[:, :])
+                    epi_params.ρᴰᵍ[:, :, t] .+
+                    epi_params.CHᵢᵍ[:, :, t]) .* population.nᵢᵍ[:, :])
 
     infected = sum(epi_params.ρᴵᵍ[:, :, t] .* population.nᵢᵍ[:, :] +
                    epi_params.ρᴬᵍ[:, :, t] .* population.nᵢᵍ[:, :])

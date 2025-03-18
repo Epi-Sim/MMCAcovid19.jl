@@ -64,8 +64,8 @@ All the parameters contained in this structure are probabilities ranged between
 
 # Auxiliary
 
-- `CHᵢᵍ::Array{Float64, 2}`: Fraction of securely confined individuals for each
-  strata and patch.
+- `CHᵢᵍ::Array{Float64, 3}`: Fraction of securely confined individuals for each
+  strata, patch and time step.
 - `Qᵢᵍ::Array{Float64, 3}`: Suceptible contacts available for each strata on a
   given patch.
 
@@ -101,7 +101,7 @@ struct Epidemic_Params
     ρᴴᴰᵍ::Array{Float64, 3}
     ρᴰᵍ::Array{Float64, 3}
     ρᴿᵍ::Array{Float64, 3}
-    CHᵢᵍ::Array{Float64, 2}
+    CHᵢᵍ::Array{Float64, 3}
 
     # R_t related arrays
     Qᵢᵍ::Array{Float64, 3}
@@ -187,7 +187,7 @@ function Epidemic_Params(βᴵ::Float64,
     ρᴴᴰᵍ = zeros(Float64, G, M, T)
     ρᴰᵍ  = zeros(Float64, G, M, T)
     ρᴿᵍ  = zeros(Float64, G, M, T)
-    CHᵢᵍ = zeros(Float64, G, M)
+    CHᵢᵍ = zeros(Float64, G, M, T)
     Qᵢᵍ  = zeros(Float64, G, M, T)
 
     return Epidemic_Params([βᴵ], [βᴬ], copy(ηᵍ), copy(αᵍ), copy(μᵍ),
