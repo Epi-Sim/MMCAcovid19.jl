@@ -103,7 +103,7 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
         # Update compartmental probabilities
         @simd for g in 1:G
             if tᶜ == t
-                ρˢᵍ[g, i, t] += CHᵢᵍ[g, i]
+                ρˢᵍ[g, i, t] += CHᵢᵍ[g, i, t]
             end
 
             Πᵢᵍ = (1 - pᵍ_eff[g]) * Pᵢᵍ[g, i] + pᵍ_eff[g] * τᵢᵍ[g, i]
@@ -145,8 +145,8 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
 
             if tᶜ == t
                 aux = ρˢᵍ[g, i, t]
-                ρˢᵍ[g, i, t] -= CHᵢᵍ[g, i]
-                CHᵢᵍ[g, i] = CHᵢ * aux
+                ρˢᵍ[g, i, t] -= CHᵢᵍ[g, i, t]
+                CHᵢᵍ[g, i, t] = CHᵢ * aux
             end
         end
     end
