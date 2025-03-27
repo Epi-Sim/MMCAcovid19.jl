@@ -626,7 +626,33 @@ Tuple formed by:
 - DataFrame containing information about the evolution of the total effective
   reproduction number R.
 """
-function compute_R_eff(epi_params::Epidemic_Params,
+function compute_R_eff_dataframe(epi_params::Epidemic_Params,
+                       population::Population_Params,
+                       τ::Int64 = 21)
+
+    M = population.M
+    G = population.G
+    T = epi_params.T
+
+    # Initialize results
+    Rᵢᵍ_eff = DataFrame()
+    Rᵢᵍ_eff.strata = repeat(1:G, outer = (T - τ) * M)
+    Rᵢᵍ_eff.patch = repeat(1:M, inner = G, outer = (T - τ))
+    Rᵢᵍ_eff.time = repeat(1:(T - τ), inner = G * M)
+
+    R_eff = DataFrame()
+    R_eff.time = 1:(T - τ)
+
+    # Compute R
+    Rᵢᵍ, R = compute_R_eff_matrix(epi_params, population, τ)
+
+    Rᵢᵍ_eff.R_eff = reshape(Rᵢᵍ, G * M * (T - τ))
+    R_eff.R_eff = R
+
+    return Rᵢᵍ_eff, R_eff
+end
+
+function compute_R_eff_matrix(epi_params::Epidemic_Params,
                        population::Population_Params,
                        τ::Int64 = 21)
 
@@ -646,15 +672,6 @@ function compute_R_eff(epi_params::Epidemic_Params,
                              ((1 - αᵍ[g]) ^ tʷ - (1 - μᵍ[g]) ^ tʷ))
     end
 
-    # Initialize results
-    Rᵢᵍ_eff = DataFrame()
-    Rᵢᵍ_eff.strata = repeat(1:G, outer = (T - τ) * M)
-    Rᵢᵍ_eff.patch = repeat(1:M, inner = G, outer = (T - τ))
-    Rᵢᵍ_eff.time = repeat(1:(T - τ), inner = G * M)
-
-    R_eff = DataFrame()
-    R_eff.time = 1:(T - τ)
-
     # Compute R
     Rᵢᵍ = zeros(Float64, G, M, (T - τ))
     R = zeros(T - τ)
@@ -665,10 +682,7 @@ function compute_R_eff(epi_params::Epidemic_Params,
         R[t] = sum(Rᵢᵍ[:, :, t] .* population.nᵢᵍ[:, :]) / population.N
     end
 
-    Rᵢᵍ_eff.R_eff = reshape(Rᵢᵍ, G * M * (T - τ))
-    R_eff.R_eff = R
-
-    return Rᵢᵍ_eff, R_eff
+    return Rᵢᵍ, R
 end
 
 
