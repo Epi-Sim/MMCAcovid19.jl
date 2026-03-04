@@ -147,6 +147,8 @@ function update_prob!(Pᵢᵍ::Array{Float64, 2},
                 aux = ρˢᵍ[g, i, t]
                 ρˢᵍ[g, i, t] -= CHᵢᵍ[g, i, t]
                 CHᵢᵍ[g, i, t + 1] = CHᵢ * aux
+            else 
+                CHᵢᵍ[g, i, t + 1] = CHᵢᵍ[g, i, t]
             end
         end
     end
