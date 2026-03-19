@@ -119,7 +119,7 @@ epi_params = Epidemic_Params(βᴵ, βᴬ, ηᵍ, αᵍ, μᵍ, θᵍ, γᵍ,
     @test size(epi_params.ρᴴᴰᵍ) == (G, M, T)
     @test size(epi_params.ρᴰᵍ) == (G, M, T)
     @test size(epi_params.ρᴿᵍ) == (G, M, T)
-    @test size(epi_params.CHᵢᵍ) == (G, M)
+    @test size(epi_params.CHᵢᵍ) == (G, M, T)
     @test size(epi_params.Qᵢᵍ) == (G, M, T)
 
 end
@@ -155,7 +155,7 @@ set_initial_infected!(epi_params, population, E₀, A₀, I₀)
     @test sum(population.nᵢᵍ .* epi_params.ρᴴᴰᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴰᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴿᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
-    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :]) ≈ 0.0  atol=0.0001
+    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
 
 end
 
@@ -180,7 +180,7 @@ run_epidemic_spreading_mmca!(epi_params, population, verbose = false)
     @test sum(population.nᵢᵍ .* epi_params.ρᴴᴰᵍ[:, :, T]) ≈ 0.0  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴰᵍ[:, :, T]) ≈ 20301.7580  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴿᵍ[:, :, T]) ≈ 949017.4345  atol=0.0001
-    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :]) ≈ 0.0  atol=0.0001
+    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :, T]) ≈ 0.0  atol=0.0001
 
 end
 
@@ -205,7 +205,7 @@ reset_params!(epi_params, population)
   @test sum(population.nᵢᵍ .* epi_params.ρᴴᴰᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
   @test sum(population.nᵢᵍ .* epi_params.ρᴰᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
   @test sum(population.nᵢᵍ .* epi_params.ρᴿᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
-  @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :]) ≈ 0.0  atol=0.0001
+  @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :, 1]) ≈ 0.0  atol=0.0001
 
 end
 
@@ -237,7 +237,7 @@ run_epidemic_spreading_mmca!(epi_params, population; tᶜ = tᶜ, κ₀ = κ₀,
     @test sum(population.nᵢᵍ .* epi_params.ρᴴᴰᵍ[:, :, T]) ≈ 0.0167  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴰᵍ[:, :, T]) ≈ 293.3980  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴿᵍ[:, :, T]) ≈ 15836.2800 atol=0.0001
-    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :]) ≈ 528258.6803  atol=0.0001
+    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :, T]) ≈ 528258.6803  atol=0.0001
 
 end
 
@@ -269,7 +269,7 @@ run_epidemic_spreading_mmca!(epi_params, population, tᶜs, κ₀s, ϕs, δs; ve
     @test sum(population.nᵢᵍ .* epi_params.ρᴴᴰᵍ[:, :, T]) ≈ 0.0374  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴰᵍ[:, :, T]) ≈ 269.0122  atol=0.0001
     @test sum(population.nᵢᵍ .* epi_params.ρᴿᵍ[:, :, T]) ≈ 14590.1274 atol=0.0001
-    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :]) ≈ 447595.3021  atol=0.0001
+    @test sum(population.nᵢᵍ .* epi_params.CHᵢᵍ[:, :, T]) ≈ 447595.3021  atol=0.0001
 
 end
 
@@ -280,7 +280,7 @@ end
 
 τ = 21
 
-Rᵢᵍ_eff, R_eff = compute_R_eff(epi_params, population, τ)
+Rᵢᵍ_eff, R_eff = MMCAcovid19.compute_R_eff_dataframe(epi_params, population, τ)
 
 
 ## Test effective reproduction number R
